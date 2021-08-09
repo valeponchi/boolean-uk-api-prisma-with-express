@@ -17,3 +17,12 @@ model Book {
   author  String
   genre   String
 }
+
+model Pet {
+  id Int @id @default(autoincrement())
+  name String
+  age Int
+  type String
+  owner String
+  city String
+}
