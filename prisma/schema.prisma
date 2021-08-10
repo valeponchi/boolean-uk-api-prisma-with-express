@@ -13,9 +13,10 @@ generator client {
 
 model Book {
   id      Int     @id @default(autoincrement())
-  title   String  @unique
+  title   String  @db.VarChar(100)
   author  String
-  genre   String
+  topic   String 
+  type    String
 }
 
 model Pet {

@@ -1,16 +1,11 @@
 const { PrismaClientKnownRequestError } = require('@prisma/client/runtime')
-const dbClient = require('../../utils/dbClient')
-//HO IMPORTATO QUESTO DB PER MODIFICARE POI COSA QUI?
+// const dbClient = require('../../utils/dbClient')
 
-function getAllBooks(req, res) {
-	dbClient.book.findMany().then(books => {
-		res.json({ books })
-	})
-}
+const { book } = require('../../utils/dbClient')
 
 function getOneBook(req, res) {
 	const id = Number(req.params.id)
-	dbClient.book
+	book
 		.findUnique({
 			where: {
 				id: id,
@@ -21,11 +16,17 @@ function getOneBook(req, res) {
 		})
 }
 
-async function createABook(req, res) {
+async function getAllBooks(req, res) {
+	// in books is the result of the promise
+	const books = await book.findMany()
+	res.json({ data: books })
+}
+
+async function createOneBook(req, res) {
 	const newBook = req.body
 
 	try {
-		const createdBook = await dbClient.book.create({ data: newBook })
+		const createdBook = await book.create({ data: newBook })
 		res.json({ data: createdBook })
 	} catch (error) {
 		res.json({ error: error.message })
@@ -34,7 +35,7 @@ async function createABook(req, res) {
 
 function deleteOne(req, res) {
 	const id = Number(req.params.id)
-	dbClient.book
+	book
 		.delete({
 			where: {
 				id: id,
@@ -46,37 +47,36 @@ function deleteOne(req, res) {
 }
 
 const getBooksByType = async (req, res) => {
-	const types = req.params.type
-	const topics = req.query.topic
+	const type = req.params.type
+	const topic = req.query.topic
 
-	console.log(types)
 	try {
 		if (topics) {
-			const books = await dbClient.book.findMany({
+			const byTopicBooks = await book.findMany({
 				where: {
-					type: types,
-					topic: topics,
+					type: type,
+					topic: topic,
 				},
 			})
-			res.json({ filteredBooksByTopic: books })
+			res.json({ filtered_by_topic: byTopicBooks })
 		} else {
-			const books = await dbClient.book.findMany({
+			const byTypeBooks = await book.findMany({
 				where: {
-					type: types,
+					type: type,
 				},
 			})
-			res.json({ filteredBooksByType: books })
+			res.json({ filtered_by_type: byTypeBooks })
 		}
 	} catch (error) {
 		res.json({ error: error.message })
 	}
 }
 
-async function getBookByAuthor(req, res) {
+async function getBooksByAuthor(req, res) {
 	const author = req.params.author
 
 	try {
-		const books = await dbClient.book.findMany({
+		const books = await book.findMany({
 			where: {
 				author: author,
 			},
@@ -96,13 +96,13 @@ async function updateABook(req, res) {
 	const bookId = Number(req.params.id)
 
 	try {
-		const foundBook = dbClient.book.findUnique({
+		const foundBook = book.findUnique({
 			where: {
 				id: bookId,
 			},
 		})
 		if (foundBook) {
-			const updatedBook = await dbClient.book.update({
+			const updatedBook = await book.update({
 				where: {
 					id: bookId,
 				},
@@ -131,6 +131,6 @@ module.exports = {
 	createOneBook,
 	deleteOne,
 	getBooksByType,
-	getBookByAuthor,
+	getBooksByAuthor,
 	updateABook,
 }

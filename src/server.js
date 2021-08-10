@@ -1,11 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
-const { PrismaClient } = require('@prisma/client')
 
 //server
 const app = express()
 
-const booksRouter = require('./books/router')
+const booksRouter = require('../src/resources/books/router')
 
 //Middreware
 app.use(morgan('dev'))
@@ -20,5 +19,5 @@ app.get('*', (req, res) => {
 
 //connect the server to the port
 app.listen(4000, () => {
-	console.log('Server is listening..')
+	console.log('The server is connected!')
 })

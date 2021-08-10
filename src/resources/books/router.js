@@ -1,4 +1,7 @@
-const booksRouter = require('express').Router
+// const express = require("express")
+// const booksRouter = express.Router()
+// OR:
+const booksRouter = require('express').Router()
 
 const {
 	getAllBooks,
@@ -6,7 +9,7 @@ const {
 	createOneBook,
 	deleteOne,
 	getBooksByType,
-	getAuthor,
+	getBooksByAuthor,
 	updateABook,
 } = require('./controller')
 
@@ -19,6 +22,8 @@ booksRouter.delete('/:id', deleteOne)
 
 booksRouter.get('/type/:type', getBooksByType)
 
-booksRouter.get('/author/:name', getAuthor)
+booksRouter.get('/author/:name', getBooksByAuthor)
+
+booksRouter.patch('/:id', updateABook)
 
 module.exports = booksRouter
