@@ -7,6 +7,7 @@
  create ".gitignore" file with "node_modules" ".env"
 
 2) **[in the TERMINAL]** ps: nodemon is installed globally on my laptop. you will have to install it if you need to.
+
 npm init -y
 
 npm i express morgan dotenv prisma
